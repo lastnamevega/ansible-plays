@@ -1,0 +1,19 @@
+- name: Update the world
+  become: yes
+  hosts: all
+  tasks:
+    - name: Update cache (if stale)
+      ansible.builtin.apt:
+        cache_valid_time: 86400 # one day in seconds
+        update_cache: yes
+    - name: Upgrade packages
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+    - name: Upgrade distribution (when available)
+      ansible.builtin.apt:
+        upgrade: full
+    - name: Clean up
+      ansible.builtin.apt:
+        autoclean: yes
+        autoremove: yes
